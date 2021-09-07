@@ -20,5 +20,5 @@ sister(Child, Sister):- female(Sister), ((mother(Child, Mother), mother(Sister, 
 parent(Child, Parent):- mother(Child, Parent); father(Child, Parent).
 aunt(Child, Aunt):- parent(Child, Parent), sister(Parent, Aunt).
 uncle(Child, Uncle):- parent(Child, Parent), brother(Parent, Uncle).
-grandfather(Child, Grandfather):- father(Child, Father), father(Father, Grandfather).
-grandmother(Child, Grandmother):- mother(Child, Mother), mother(Mother, Grandmother).
+grandfather(Child, Grandfather):- (father(Child, Father), father(Father, Grandfather));(mother(Child, Mother), father(Mother, Grandfather)).
+grandmother(Child, Grandmother):- mother(Child, Mother), mother(Mother, Grandmother);(father(Child, Father), mother(Father, Grandmother)).
