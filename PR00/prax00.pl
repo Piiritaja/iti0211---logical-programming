@@ -1,2 +1,2 @@
-lendab(kaspar).
-lendab(maris).
+lendab(part).
+lendab(hani).
