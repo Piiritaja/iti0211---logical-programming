@@ -1,1 +1,1 @@
-isa(sedrik).
+male(sedrik).
