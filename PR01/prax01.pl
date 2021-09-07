@@ -1,1 +1,1 @@
-% Mingi asi
+isa(sedrik).
