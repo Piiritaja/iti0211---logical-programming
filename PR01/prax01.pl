@@ -19,3 +19,4 @@ brother(Child, Brother):- male(Brother), ((mother(Child, Mother), mother(Brother
 sister(Child, Sister):- female(Sister), ((mother(Child, Mother), mother(Sister, Mother));(father(Child, Father), father(Sister, Father))), not(Sister=Child).
 parent(Child, Parent):- mother(Child, Paretn); father(Child, Parent).
 aunt(Child, Aunt):- parent(Child, Parent), sister(Parent, Aunt).
+uncle(Child, Uncle):- parent(Child, Parent), brother(Parent, Uncle).
