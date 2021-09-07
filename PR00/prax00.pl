@@ -1,1 +1,2 @@
 lendab(kaspar).
+lendab(maris).
