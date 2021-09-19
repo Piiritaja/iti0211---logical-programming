@@ -1,22 +1,43 @@
-mother(liis,maris).
-mother(ago,liis).
-mother(mikk, evelin).
-
-married(evelin,ago).
-married(liis,mikk).
-
-male(sedrik).
-male(ago).
-male(kaspar).
-male(mikk).
+male(ulo).
+male(aavo).
+male(ksapar).
+male(martin).
+male(lauri).
+male(joonas).
+male(mihkel).
+male(juss).
+male(mati).
+male(heino).
+male(vello).
 
 female(maris).
-female(liis).
-female(evelin).
+female(aari).
+female(angela).
+female(maie).
+female(helga).
+female(maarika).
+
+mother(kaspar,maris).
+mother(martin,maris).
+mother(lauri, aari).
+mother(joonas, aari).
+mother(mihkel, angela).
+mother(juss, angela).
+mother(maris, helga).
+mother(aavo, helga).
+mother(aari, helga).
+mother(mati, maie).
+mother(maarika, maie).
+
+married(maris,mati).
+married(angela,aavo).
+married(aari, ulo).
+married(maie, vello).
+married(helga, heino).
 
 father(Child, Father):- mother(Child,Mother), married(Mother, Father), male(Father).
-brother(Child, Brother):- male(Brother), ((mother(Child, Mother), mother(Brother, Mother));(father(Child, Father), father(Brother, Father))), not(Child=Brother).
-sister(Child, Sister):- female(Sister), ((mother(Child, Mother), mother(Sister, Mother));(father(Child, Father), father(Sister, Father))), not(Sister=Child).
+brother(Child, Brother):- male(Brother), ((mother(Child, Mother), mother(Brother, Mother))), not(Child=Brother).
+sister(Child, Sister):- female(Sister), ((mother(Child, Mother), mother(Sister, Mother))), not(Sister=Child).
 parent(Child, Parent):- mother(Child, Parent); father(Child, Parent).
 aunt(Child, Aunt):- parent(Child, Parent), sister(Parent, Aunt).
 uncle(Child, Uncle):- parent(Child, Parent), brother(Parent, Uncle).
