@@ -58,5 +58,5 @@ ancestor1(Child, Ancestor, N) :- N == 1, parent(Child, Ancestor).
 
 ancestor1(Child, Ancestor, N) :-
     X is -(N, 1),
-    parent(Child, Ancestor),
-    ancestor1(Ancestor, Ancestor, X).
+    parent(Child, Parent),
+    ancestor1(Parent, Ancestor, X).
