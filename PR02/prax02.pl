@@ -52,3 +52,4 @@ ancestor(Child, Ancestor) :-
     ancestor(Parent, Ancestor). 
 
 male_ancestor(Child, Parent):- ancestor(Child, Parent), male(Parent).
+female_ancestor(Child, Parent):- ancestor(Child, Parent), female(Parent).
