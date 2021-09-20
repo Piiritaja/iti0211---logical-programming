@@ -44,9 +44,11 @@ uncle(Child, Uncle):- parent(Child, Parent), brother(Parent, Uncle).
 grandfather(Child, Grandfather):- (father(Child, Father), father(Father, Grandfather));(mother(Child, Mother), father(Mother, Grandfather)).
 grandmother(Child, Grandmother):- mother(Child, Mother), mother(Mother, Grandmother);(father(Child, Father), mother(Father, Grandmother)).
 
-ancestor(Child, Ancestor) :- 
-    parent(Child, Ancestor). 
+ancestor(Child, Parent) :- 
+    parent(Child, Parent). 
 
 ancestor(Child, Ancestor) :-
     parent(Child, Parent),
     ancestor(Parent, Ancestor). 
+
+male_ancestor(Child, Parent):- ancestor(Child, Parent), male(Parent).
