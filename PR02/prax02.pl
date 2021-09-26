@@ -73,6 +73,6 @@ ancestor2(Child, Parent, X):-
     length(Bag, Lenght),
     Lenght > X.
 
-ancestor2(Child, Ancestor, X):- 
-    parent(Child, Parent),
-    ancestor2(Parent, Ancestor, X).
+ancestor2(Child, Parent, X):- 
+    parent(Child, Y),
+    ancestor2(Y, Parent, X).
