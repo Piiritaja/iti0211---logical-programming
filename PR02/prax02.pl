@@ -66,8 +66,6 @@ ancestor1(Child, Ancestor, N) :-
     parent(Child, Parent),
     ancestor1(Parent, Ancestor, X).
 
-
-%6. Lisa teadmusbaasile reegel ancestor2/3, mis leiab esivanemad, kellel on rohkem kui X last.
 ancestor2(Child, Parent, X):-
     bagof(Child, parent(Child, Parent), Bag),
     length(Bag, Lenght),
