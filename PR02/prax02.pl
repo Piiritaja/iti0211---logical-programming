@@ -1,3 +1,4 @@
+male(karl).
 male(ulo).
 male(aavo).
 male(ksapar).
@@ -10,6 +11,7 @@ male(mati).
 male(heino).
 male(vello).
 
+female(maiu).
 female(maris).
 female(aari).
 female(angela).
@@ -28,7 +30,9 @@ mother(aavo, helga).
 mother(aari, helga).
 mother(mati, maie).
 mother(maarika, maie).
+mother(heino,maiu).
 
+married(maiu, karl).
 married(maris,mati).
 married(angela,aavo).
 married(aari, ulo).
