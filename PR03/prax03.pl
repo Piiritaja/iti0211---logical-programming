@@ -12,8 +12,13 @@ suurim([X, Y|Z], [M|U]):-
 %3. Kirjutada reegel paki/2, mis elimineerib listist üksteisele vahetult järgnevad korduvad elemendid.
 paki([],[]).
 paki([X],[X]).
-paki([H1, H2|T], [H1|U]):-
+paki([H1, H2|T1], [H1|T2]):-
     H1 == H2,
-    paki([H2|T],[H1|U]);
+    paki([H2|T1],[H1|T2]);
     H1 \= H2,
-    paki([H2|T],U).
+    paki([H2|T1],T2).
+
+%4. Kirjutada reegel duplikeeri/2, mis kahekordistab elemendid etteantud listis.
+
+duplikeeri([],[]).
+duplikeeri([H1| T1], [H1,H1|T2]):- duplikeeri(T1, T2).
