@@ -66,10 +66,11 @@ female_ancestor(Child, Parent):- ancestor(Child, Parent), female(Parent).
 ancestor1(Child, Ancestor, N) :- N == 1, parent(Child, Ancestor).
 
 ancestor1(Child, Ancestor, N) :-
-    X is -(N, 1),
+    X is N - 1,
     parent(Child, Parent),
     ancestor1(Parent, Ancestor, X).
 
+%6
 ancestor2(Child, Parent, X):-
     bagof(Children, parent(Children, Parent), Bag),
     length(Bag, Lenght),
