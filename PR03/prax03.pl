@@ -8,3 +8,12 @@ suurim([X], [X]).
 suurim([X, Y|Z], [M|U]):- 
     M is max(X,Y),
     suurim([Y|Z], U).
+
+%3. Kirjutada reegel paki/2, mis elimineerib listist üksteisele vahetult järgnevad korduvad elemendid.
+paki([],[]).
+paki([X],[X]).
+paki([H1, H2|T], [H1|U]):-
+    H1 == H2,
+    paki([H2|T],[H1|U]);
+    H1 \= H2,
+    paki([H2|T],U).
