@@ -22,3 +22,12 @@ paki([H1, H2|T1], [H1|T2]):-
 
 duplikeeri([],[]).
 duplikeeri([H1| T1], [H1,H1|T2]):- duplikeeri(T1, T2).
+
+%5. Kirjutada reegel kordista/3, mis kordistab listi kõiki elemente etteantud arv korda.
+list_of_n(El, 0, []). 
+list_of_n(El, N, L):- NewN is N-1, append([El], A, L), list_of_n(El,NewN,A).
+kordista([],N,[]).
+kordista([H|T], N, L):-
+    list_of_n(H, N, A),
+    append(A,Y,L),
+    kordista(T,N,Y).
