@@ -24,10 +24,35 @@ duplikeeri([],[]).
 duplikeeri([H1| T1], [H1,H1|T2]):- duplikeeri(T1, T2).
 
 %5. Kirjutada reegel kordista/3, mis kordistab listi kõiki elemente etteantud arv korda.
-list_of_n(El, 0, []). 
+list_of_n(_, 0, []). 
 list_of_n(El, N, L):- NewN is N-1, append([El], A, L), list_of_n(El,NewN,A).
-kordista([],N,[]).
+kordista([],_,[]).
 kordista([H|T], N, L):-
     list_of_n(H, N, A),
     append(A,Y,L),
     kordista(T,N,Y).
+
+%6. Kirjutada reegel vordle_predikaadiga/3, mis võrdleb etteantud predikaadiga listi kõiki liikmeid ja paneb väljundlisti need elemendid, mis vastavad tingimustele. Võrdluspredikaadid on: - paaritu_arv - paaris_arv - suurem_kui(X) Võrdluspredikaadid tuleb ise implementeerida.
+paaris_arv(X):-
+    0 is X rem 2,
+    write('paaris').
+
+paaritu_arv(X):-
+    1 is X rem 2,
+    write('paaritu').
+
+suurem_kui(X, Y):-
+    X > Y, 
+    write('suurem kui').
+
+vordle_predikaadiga([], _, []).
+vordle_predikaadiga([H|T], Action, X):-
+    append(Action, [H], List),
+    Pred =.. List,
+    Pred,
+    append([H],Y,X),
+    vordle_predikaadiga(T,Action,Y),
+    !.
+
+vordle_predikaadiga([_|T], Action, X) :-
+        vordle_predikaadiga(T, Action, X).
