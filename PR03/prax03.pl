@@ -50,8 +50,9 @@ vordle_predikaadiga([H|T], Action, X):-
     append(Action, [H], List),
     Pred =.. List,
     Pred,
-    append([H],Y,X),
-    vordle_predikaadiga(T,Action,Y).
+    vordle_predikaadiga(T,Action,Y),
+    append([H],Y,X).
+
 
 vordle_predikaadiga([_|T], Action, X) :-
         vordle_predikaadiga(T, Action, X).
