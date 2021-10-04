@@ -34,25 +34,27 @@ kordista([H|T], N, L):-
 
 %6. Kirjutada reegel vordle_predikaadiga/3, mis võrdleb etteantud predikaadiga listi kõiki liikmeid ja paneb väljundlisti need elemendid, mis vastavad tingimustele. Võrdluspredikaadid on: - paaritu_arv - paaris_arv - suurem_kui(X) Võrdluspredikaadid tuleb ise implementeerida.
 paaris_arv(X):-
-    0 is X rem 2,
-    write('paaris').
+    X rem 2 =:= 0.
 
 paaritu_arv(X):-
-    1 is X rem 2,
-    write('paaritu').
+    X rem 2 =:= 1.
 
 suurem_kui(X, Y):-
-    X > Y, 
-    write('suurem kui').
+    write(X),
+    write(' > '),
+    write(Y),
+    nl,
+    X < Y.
+
 
 vordle_predikaadiga([], _, []).
 vordle_predikaadiga([H|T], Action, X):-
     append(Action, [H], List),
     Pred =.. List,
     Pred,
+    append([H],Y,X),
     vordle_predikaadiga(T,Action,Y),
-    append([H],Y,X).
-
+    !.
 
 vordle_predikaadiga([_|T], Action, X) :-
         vordle_predikaadiga(T, Action, X).
