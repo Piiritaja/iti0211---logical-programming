@@ -40,10 +40,6 @@ paaritu_arv(X):-
     X rem 2 =:= 1.
 
 suurem_kui(X, Y):-
-    write(X),
-    write(' > '),
-    write(Y),
-    nl,
     X < Y.
 
 
