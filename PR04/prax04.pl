@@ -32,6 +32,7 @@ reisi(X,Z, mine(X,Y,Tee)):-
 reisi_transpordiga(X,Y,mine(X,Y,Transport)):- tee(X,Y, _,Transport), !.
 reisi_transpordiga(X,Z, mine(X,Y,Transport,Tee)):-
     tee(X,Y,_,Transport),
+    tee(X,Y),
     reisi_transpordiga(Y,Z,Tee).
 
 %5. Lisa teadmusbaasile reegel reisi/4, mis näitab läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisiks kuluvat aega alguspunktist lõpppunkti.
