@@ -8,6 +8,10 @@ lennukiga(paris, berlin, 120).
 lennukiga(paris, tallinn, 120).
 lennukiga(stockholm,paris,120).
 
+tee(X, Y, lennukiga) :- lennukiga(X, Y, _).
+tee(X, Y, rongiga) :- rongiga(X, Y, _).
+tee(X, Y, bussiga) :- bussiga(X, Y, _).
+tee(X, Y, laevaga) :- laevaga(X, Y, _).
 
 tee(X,Y):- 
     laevaga(X,Y,_);
@@ -23,3 +27,10 @@ reisi(X,Y,mine(X,Y)):- tee(X,Y), !.
 reisi(X,Z, mine(X,Y,Tee)):-
     tee(X,Y),
     reisi(Y,Z,Tee).
+
+%4. Lisa teadmusbaasile reegel reisi_transpordiga/3, mis lisaks eelnevale näitab ka seda, millise transpordivahendiga antud vahemaa läbitakse.
+reisi_transpordiga(X,Y,mine(X,Y,Transport)):- tee(X,Y, Transport), !.
+reisi_transpordiga(X,Z, mine(X,Y,Transport,Tee)):-
+    tee(X,Y,Transport),
+    tee(X,Y),
+    reisi_transpordiga(Y,Z,Tee).
