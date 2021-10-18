@@ -63,7 +63,7 @@ aegade_vahe(Aeg1, Aeg2, Vahe):-
     (S3 >= 0, Minutes is M2 - M1)),
     ((Minutes < 0, M3 is Minutes + 60, Hours is H2 - H1 - 1);
     (Minutes >= 0, M3 is Minutes, Hours is H2 - H1)),
-    ((Hours < 0, H2 is Hours + 24);
+    ((Hours < 0, H3 is Hours + 24);
     (Hours >= 0, H3 is Hours)).
 
 aegade_summa(Aeg1, Aeg2, Summa):-
@@ -109,4 +109,3 @@ lyhim_reis(X, Y, Tee, Hind):-
     findall(Aeg, reisi(X, Y, _, _, Aeg), Ajad),
     find_shortest_time(Ajad, Time), !,
     reisi(X, Y, Tee, Hind, Time).
-    
