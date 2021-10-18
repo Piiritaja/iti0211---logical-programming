@@ -86,9 +86,9 @@ reisi(X, Z, mine(X,Y,Transport,Tee), Hind, Aeg):-
     tee(X,Y,Cost,Transport,T1,T2),
     aegade_vahe(T1,T2,Vahe1),
     tee(Y,Z,_,_,T3,_),
-    time(H1,M1,S1) = T3,
+    time(_,_,_) = T3,
     aegade_vahe(T2,T3,Vahe2),
-    time(H2,M2,S2) = Vahe2,
+    time(H2,_,_) = Vahe2,
     reisi(Y,Z,Tee,Price,Time),
     ((H2 >= 1, aegade_summa(Vahe1, Vahe2, Vahe));
     (H2 < 1, aegade_summa(Vahe1, Vahe2, Vahe3),
