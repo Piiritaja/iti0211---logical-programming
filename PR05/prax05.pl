@@ -1,12 +1,13 @@
 laevaga(tallinn, helsinki, 120, time(12, 45, 0.0), time(17, 50, 0.0)).
 laevaga(tallinn, stockholm, 480, time(12, 45, 0.0), time(11, 25, 0.0)).
-bussiga(tallinn, riia, 300, time(12, 45, 0.0), time(12, 46, 0.0)).
-rongiga(riia, berlin, 680, time(12, 45, 0.0), time(13, 55, 0.0)).
+bussiga(tallinn, riia, 100, time(12, 45, 0.0), time(12, 46, 0.0)).
+rongiga(riia, berlin, 100, time(12, 45, 0.0), time(13, 55, 0.0)).
 lennukiga(tallinn, helsinki, 30, time(12, 45, 0.0), time(14, 40, 0.0)).
 lennukiga(helsinki, paris, 180, time(17, 55, 0.0), time(20, 50, 0.0)).
 lennukiga(paris, berlin, 120, time(15, 55, 0.0), time(20, 45, 0.0)).
 lennukiga(paris, tallinn, 12, time(13, 45, 0.0), time(12, 45, 0.0)).
-
+lennukiga(stockholm,paris,120, time(13, 45, 0.0), time(12, 45, 0.0)).
+lennukiga(berlin, helsinki, 100, time(13,45, 0.0), time(12, 45, 0.0)).
 
 tee(X, Y, Cost, lennukiga, T1, T2) :- lennukiga(X, Y, Cost, T1, T2).
 tee(X, Y, Cost, rongiga, T1, T2) :- rongiga(X, Y, Cost, T1, T2).
@@ -66,7 +67,7 @@ find_best_price([H1, H2|T], Price):-
 
 odavaim_reis(X, Y, Tee, Hind):-
     findall(Price, reisi(X, Y, _, Price), PriceList),
-    find_best_price(PriceList, Hind), !,
+    find_best_price(PriceList, Hind),
     reisi(X, Y, Tee, Hind).
 
 %7. Lisa teadmusbaasile reegel lyhim_reis/4, mis leiab ajaliselt lühima marsruudi kahe punkti vahel, näitab teel läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisi maksumust.  
@@ -94,24 +95,27 @@ aegade_summa(Aeg1, Aeg2, Summa):-
     (Minutes >= 60, M3 is Minutes - 60, H3 is H2 + H1 + 1)).
 
 
-reisi(X, Y, mine(X,Y,Transport), Hind, Aeg):- 
+reisi0(X, Y, mine(X,Y,Transport), Hind, Aeg, Visited):- 
     tee(X, Y, Hind, Transport, T1, T2),
-    aegade_vahe(T1,T2,Aeg),
-    !.
+    aegade_vahe(T1,T2,Aeg).
     
-reisi(X, Z, mine(X,Y,Transport,Tee), Hind, Aeg):-
+reisi0(X, Z, mine(X,Y,Transport,Tee), Hind, Aeg, Visited):-
     tee(X,Y,Cost,Transport,T1,T2),
+    Y \= Z,
+    not(member(Y, Visited)),
     aegade_vahe(T1,T2,Vahe1),
-    tee(Y,Z,_,_,T3,_),
-    time(_,_,_) = T3,
+    tee(Y,W,_,_,T3,_),
     aegade_vahe(T2,T3,Vahe2),
     time(H2,_,_) = Vahe2,
-    reisi(Y,Z,Tee,Price,Time),
+    reisi0(Y,Z,Tee,Price,Time, [Y | Visited]),
     ((H2 >= 1, aegade_summa(Vahe1, Vahe2, Vahe));
     (H2 < 1, aegade_summa(Vahe1, Vahe2, Vahe3),
     aegade_summa(Vahe3, time(24,0,0),Vahe))),
     aegade_summa(Vahe,Time, Aeg),
     Hind is +(Cost,Price).
+
+reisi(X, Y, Tee, Hind, Aeg):-
+    reisi0(X, Y, Tee, Hind, Aeg, [X]).
 
 find_shortest_time([T], T).
 find_shortest_time([T1, T2|Tail], Time):-
@@ -124,5 +128,5 @@ find_shortest_time([T1, T2|Tail], Time):-
 
 lyhim_reis(X, Y, Tee, Hind):-
     findall(Aeg, reisi(X, Y, _, _, Aeg), Ajad),
-    find_shortest_time(Ajad, Time), !,
+    find_shortest_time(Ajad, Time),
     reisi(X, Y, Tee, Hind, Time).
