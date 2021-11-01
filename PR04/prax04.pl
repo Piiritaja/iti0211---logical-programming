@@ -24,7 +24,6 @@ reisi(X,Y):- tee(X,Y,_,_), !.
 reisi(X,Z):- tee(X,Y,_,_), reisi(Y,Z).
 
 %3. Lisa teadmusbaasile reegel reisi/3, mis lisaks eelnevale näitab ka teel läbitavad linnad.
-%TODO add member chekc
 reisi0(X,Y,_,mine(X,Y)):- tee(X,Y,_,_).
 reisi0(X,Z, Visited, mine(X,Y,Tee)):-
     tee(X,Y,_,_),
@@ -37,10 +36,16 @@ reisi(X, Y, Tee) :-
     reisi0(X, Y, [X], Tee).
 
 %4. Lisa teadmusbaasile reegel reisi_transpordiga/3, mis lisaks eelnevale näitab ka seda, millise transpordivahendiga antud vahemaa läbitakse.
-reisi_transpordiga(X,Y,mine(X,Y,Transport)):- tee(X,Y, _,Transport), !.
-reisi_transpordiga(X,Z, mine(X,Y,Transport,Tee)):-
+reisi_transpordiga0(X,Y,mine(X,Y,Transport), _):- tee(X,Y, _,Transport).
+reisi_transpordiga0(X,Z, mine(X,Y,Transport,Tee), Visited):-
     tee(X,Y,_,Transport),
-    reisi_transpordiga(Y,Z,Tee).
+    Y \= Z,
+    not(member(Y,Visited)),
+    reisi_transpordiga0(Y,Z,Tee, [Y | Visited]).
+
+reisi_transpordiga(X, Y, Tee) :-
+    reisi_transpordiga0(X, Y, Tee, [X]).
+
 
 %5. Lisa teadmusbaasile reegel reisi/4, mis näitab läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisiks kuluvat aega alguspunktist lõpppunkti.
 /*reisi(X,Y,mine(X,Y,Transport),Hind):- tee(X,Y, Hind, Transport), !. 
