@@ -20,8 +20,15 @@ tee(X,Y,Cost):-
     rongiga(X,Y,Cost);
     lennukiga(X,Y,Cost).
 %2. Lisa teadmusbaasile rekursiivne reegel reisi/2, mis leiab, kas on võimalik reisida ühest linnast teise. Ühenduse leidmisel võib olla vajalik kombineerida omavahel erinevaid transpordi vahendeid. 
-reisi(X,Y):- tee(X,Y,_,_), !.
-reisi(X,Z):- tee(X,Y,_,_), reisi(Y,Z).
+reisi0(X,Y,_):- tee(X,Y,_,_).
+reisi0(X,Z, Visited):- 
+    tee(X,Y,_,_),
+    Y \=Z,
+    not(member(Y, Visited)),
+    reisi0(Y,Z, [Y | Visited]).
+
+reisi(X,Y):-
+    distinct(reisi0(X,Y,[X])).
 
 %3. Lisa teadmusbaasile reegel reisi/3, mis lisaks eelnevale näitab ka teel läbitavad linnad.
 reisi0(X,Y,_,mine(X,Y)):- tee(X,Y,_,_).
