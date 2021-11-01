@@ -2,30 +2,53 @@
 
 tee(X, Y, Cost, lennukiga, T1, T2) :- lennukiga(X, Y, Cost, T1, T2).
 
-tee(X,Y,Cost):- 
-    lennukiga(X,Y,Cost, _, _).
 %2. Lisa teadmusbaasile rekursiivne reegel reisi/2, mis leiab, kas on võimalik reisida ühest linnast teise. Ühenduse leidmisel võib olla vajalik kombineerida omavahel erinevaid transpordi vahendeid. 
-reisi(X,Y):- tee(X,Y,_,_,_,_).
-reisi(X,Z):- tee(X,Y,_,_,_,_), reisi(Y,Z,_,_).
+reisi0(X,Y,_):- tee(X,Y,_,_,_,_).
+reisi0(X,Z, Visited):- 
+    tee(X,Y,_,_,_,_),
+    not(member(Y, Visited)),
+    reisi0(Y,Z, [Y | Visited]).
+
+reisi(X,Y):-
+    distinct(reisi0(X,Y,[X])).
 
 %3. Lisa teadmusbaasile reegel reisi/3, mis lisaks eelnevale näitab ka teel läbitavad linnad.
-reisi(X,Y,mine(X,Y)):- tee(X,Y,_,_,_,_).
-reisi(X,Z, mine(X,Y,Tee)):-
-    tee(X,Y,_,_,_,_),
-    reisi(Y,Z,Tee).
+reisi0(X,Y,_,mine(X,Y)):- tee(X,Y,_,_,_,_).
+reisi0(X,Z, Visited, mine(X,Y,Tee)):-
+    tee(X,Y,_, _, _, _),
+    Y \= Z,
+    not(member(Y, Visited)),
+    reisi0(Y,Z, [Y | Visited], Tee).
+
+reisi(X, Y, Tee) :-
+    X \= Y,
+    distinct(reisi0(X, Y, [X], Tee)).
 
 %4. Lisa teadmusbaasile reegel reisi_transpordiga/3, mis lisaks eelnevale näitab ka seda, millise transpordivahendiga antud vahemaa läbitakse.
-reisi_transpordiga(X,Y,mine(X,Y,Transport)):- tee(X,Y, _,Transport,_,_), !.
-reisi_transpordiga(X,Z, mine(X,Y,Transport,Tee)):-
+reisi_transpordiga0(X,Y,mine(X,Y,Transport), _):- tee(X,Y, _,Transport,_,_).
+reisi_transpordiga0(X,Z, mine(X,Y,Transport,Tee), Visited):-
     tee(X,Y,_,Transport,_,_),
-    reisi_transpordiga(Y,Z,Tee).
+    Y \= Z,
+    not(member(Y,Visited)),
+    reisi_transpordiga0(Y,Z,Tee, [Y | Visited]).
+
+reisi_transpordiga(X, Y, Tee) :-
+    reisi_transpordiga0(X, Y, Tee, [X]).
+
 
 %5. Lisa teadmusbaasile reegel reisi/4, mis näitab läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisiks kuluvat aega alguspunktist lõpppunkti.
-reisi(X,Y,mine(X,Y,Transport),Hind):- tee(X,Y, Hind, Transport, _, _), !. 
-reisi(X,Z,mine(X,Y,Transport,Tee), Hind):-
+reisi0(X,Y,mine(X,Y,Transport),Hind, _):- tee(X,Y, Hind, Transport,_,_). 
+reisi0(X,Z,mine(X,Y,Transport,Tee), Hind, Visited):-
     tee(X,Y,Cost,Transport,_,_),
-    reisi(Y,Z,Tee,Price),
+    Y \= Z,
+    not(member(Y, Visited)),
+    length(Visited, Len),
+    Len < 4,
+    reisi0(Y,Z,Tee,Price, [Y | Visited]),
     Hind is +(Cost,Price).
+
+reisi(X, Y, Tee, Hind):- 
+    distinct(reisi0(X, Y, Tee, Hind, [X])).
 
 %6. Lisa teadmusbaasile reegl odavaim_reis/4, mis leiab odavaima reisi kahe punkti vahel, näitab teel läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisi maksumust.
 find_best_price([H], H).
@@ -35,7 +58,7 @@ find_best_price([H1, H2|T], Price):-
 
 odavaim_reis(X, Y, Tee, Hind):-
     findall(Price, reisi(X, Y, _, Price), PriceList),
-    find_best_price(PriceList, Hind), !,
+    find_best_price(PriceList, Hind),
     reisi(X, Y, Tee, Hind).
 
 %7. Lisa teadmusbaasile reegel lyhim_reis/4, mis leiab ajaliselt lühima marsruudi kahe punkti vahel, näitab teel läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisi maksumust.  
@@ -63,24 +86,29 @@ aegade_summa(Aeg1, Aeg2, Summa):-
     (Minutes >= 60, M3 is Minutes - 60, H3 is H2 + H1 + 1)).
 
 
-reisi(X, Y, mine(X,Y,Transport), Hind, Aeg):- 
+reisi0(X, Y, mine(X,Y,Transport), Hind, Aeg, Visited):- 
     tee(X, Y, Hind, Transport, T1, T2),
     aegade_vahe(T1,T2,Aeg).
     
-reisi(X, Z, mine(X,Y,Transport,Tee), Hind, Aeg):-
+reisi0(X, Z, mine(X,Y,Transport,Tee), Hind, Aeg, Visited):-
     tee(X,Y,Cost,Transport,T1,T2),
-    !,
+    Y \= Z,
+    not(member(Y, Visited)),
+    length(Visited, Len),
+    Len < 3,
     aegade_vahe(T1,T2,Vahe1),
-    tee(Y,Z,_,_,T3,_),
-    time(_,_,_) = T3,
+    tee(Y,W,_,_,T3,_),
     aegade_vahe(T2,T3,Vahe2),
     time(H2,_,_) = Vahe2,
-    reisi(Y,Z,Tee,Price,Time),
+    reisi0(Y,Z,Tee,Price,Time, [Y | Visited]),
     ((H2 >= 1, aegade_summa(Vahe1, Vahe2, Vahe));
     (H2 < 1, aegade_summa(Vahe1, Vahe2, Vahe3),
     aegade_summa(Vahe3, time(24,0,0),Vahe))),
     aegade_summa(Vahe,Time, Aeg),
     Hind is +(Cost,Price).
+
+reisi(X, Y, Tee, Hind, Aeg):-
+    distinct(reisi0(X, Y, Tee, Hind, Aeg, [X])).
 
 find_shortest_time([T], T).
 find_shortest_time([T1, T2|Tail], Time):-
@@ -93,5 +121,5 @@ find_shortest_time([T1, T2|Tail], Time):-
 
 lyhim_reis(X, Y, Tee, Hind):-
     findall(Aeg, reisi(X, Y, _, _, Aeg), Ajad),
-    find_shortest_time(Ajad, Time), !,
+    find_shortest_time(Ajad, Time),
     reisi(X, Y, Tee, Hind, Time).
