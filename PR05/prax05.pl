@@ -19,27 +19,44 @@ tee(X,Y,Cost):-
     rongiga(X,Y,Cost, _, _);
     lennukiga(X,Y,Cost, _, _).
 %2. Lisa teadmusbaasile rekursiivne reegel reisi/2, mis leiab, kas on võimalik reisida ühest linnast teise. Ühenduse leidmisel võib olla vajalik kombineerida omavahel erinevaid transpordi vahendeid. 
-reisi(X,Y):- tee(X,Y,_,_), !.
-reisi(X,Z):- tee(X,Y,_,_), reisi(Y,Z,_,_).
+reisi(X,Y):- tee(X,Y,_,_, _, _), !.
+reisi(X,Z):- tee(X,Y,_,_,_,_), reisi(Y,Z).
 
 %3. Lisa teadmusbaasile reegel reisi/3, mis lisaks eelnevale näitab ka teel läbitavad linnad.
-reisi(X,Y,mine(X,Y)):- tee(X,Y,_,_,_,_), !.
-reisi(X,Z, mine(X,Y,Tee)):-
+reisi0(X,Y,_,mine(X,Y)):- tee(X,Y,_,_).
+reisi0(X,Z, Visited, mine(X,Y,Tee)):-
     tee(X,Y,_,_,_,_),
-    reisi(Y,Z,Tee).
+    Y \= Z,
+    not(member(Y, Visited)),
+    reisi0(Y,Z, [Y | Visited], Tee).
+
+reisi(X, Y, Tee) :-
+    X \= Y,
+    reisi0(X, Y, [X], Tee).
 
 %4. Lisa teadmusbaasile reegel reisi_transpordiga/3, mis lisaks eelnevale näitab ka seda, millise transpordivahendiga antud vahemaa läbitakse.
-reisi_transpordiga(X,Y,mine(X,Y,Transport)):- tee(X,Y, _,Transport,_,_), !.
-reisi_transpordiga(X,Z, mine(X,Y,Transport,Tee)):-
+reisi_transpordiga0(X,Y,mine(X,Y,Transport), _):- tee(X,Y, _,Transport,_,_).
+reisi_transpordiga0(X,Z, mine(X,Y,Transport,Tee), Visited):-
     tee(X,Y,_,Transport,_,_),
-    reisi_transpordiga(Y,Z,Tee).
+    Y \= Z,
+    not(member(Y,Visited)),
+    reisi_transpordiga0(Y,Z,Tee, [Y | Visited]).
+
+reisi_transpordiga(X, Y, Tee) :-
+    reisi_transpordiga0(X, Y, Tee, [X]).
+
 
 %5. Lisa teadmusbaasile reegel reisi/4, mis näitab läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisiks kuluvat aega alguspunktist lõpppunkti.
-reisi(X,Y,mine(X,Y,Transport),Hind):- tee(X,Y, Hind, Transport, _, _), !. 
-reisi(X,Z,mine(X,Y,Transport,Tee), Hind):-
+reisi0(X,Y,mine(X,Y,Transport),Hind, _):- tee(X,Y, Hind, Transport,_,_). 
+reisi0(X,Z,mine(X,Y,Transport,Tee), Hind, Visited):-
     tee(X,Y,Cost,Transport,_,_),
-    reisi(Y,Z,Tee,Price),
+    Y \= Z,
+    not(member(Y, Visited)),
+    reisi0(Y,Z,Tee,Price, [Y | Visited]),
     Hind is +(Cost,Price).
+
+reisi(X, Y, Tee, Hind):- 
+    reisi0(X, Y, Tee, Hind, [X]).
 
 %6. Lisa teadmusbaasile reegl odavaim_reis/4, mis leiab odavaima reisi kahe punkti vahel, näitab teel läbitavaid linnu, millise transpordivahendiga antud vahemaa läbitakse ja reisi maksumust.
 find_best_price([H], H).
