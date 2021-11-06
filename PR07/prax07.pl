@@ -14,9 +14,8 @@ is_a(vetikas,veetaimed).
 
 
 % 2) Defineerige seosed kes keda sööb kasutades predikaati eats/2. 
-
 eats(zooplankton,veetaimed).
-eats(kalad,zooplanton).
+eats(kalad,zooplankton).
 eats(veeimetajad,kalad).
 
 % 3) Programmeerige predikaat count_terminals(Node,Terminals,Count), mis leiab terminaalsete tippude arvu.
@@ -44,3 +43,24 @@ count_terminals(Node, [Node], 1):-
 count_terminals(Node, Terminals, Count):-
     findall(Terminal, terminal(Terminal, Node), Terminals),
     length(Terminals, Count).
+
+% 4) Programmeerige predikaat extinction(Who,What_spieces,How_many), mis leiab väljasurevad liigid ja nende arvu, kui anda ette algselt häviv liik. 
+
+inherits_eats(Who, Whom):-
+    eats(Who, Whom).
+
+inherits_eats(Z, Whom):-
+    eats(Z, W),
+    inherits_eats(W, Whom).
+
+get_spieces_from_parents([],[]).
+get_spieces_from_parents([Parent | Parents], Children):-
+    count_terminals(Parent, Y, _),
+    append(Y, Ultimate, Children),
+    get_spieces_from_parents(Parents, Ultimate).
+
+
+extinction(Who, Spieces, Count):-
+    findall(Spiece, inherits_eats(Spiece, Who), Parents),
+    get_spieces_from_parents([Who | Parents], Spieces),
+    length(Spieces, Count).
