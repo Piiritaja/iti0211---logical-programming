@@ -38,6 +38,8 @@ terminal(SubClass, Class):-
     not(is_a(SubClass, Y)),
     terminal(SubClass,Y).
 
+count_terminals(Node, [Node], 1):-
+    not(is_a(_, Node)), !.
 
 count_terminals(Node, Terminals, Count):-
     findall(Terminal, terminal(Terminal, Node), Terminals),
