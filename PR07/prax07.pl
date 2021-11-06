@@ -61,6 +61,26 @@ get_spieces_from_parents([Parent | Parents], Children):-
 
 
 extinction(Who, Spieces, Count):-
+    is_a(Who,_),
     findall(Spiece, inherits_eats(Spiece, Who), Parents),
     get_spieces_from_parents([Who | Parents], Spieces),
     length(Spieces, Count).
+
+% Lisa reegel find_most_sensitive_species/3 Lisatud reegel peab leidma liigi, mille väljasuremine tekitaks toitumisahela kaudu liigilisele mitmekesisusele kõige suuremat kahju.
+
+:-dynamic best/3.
+
+find_extinction:-
+    extinction(Who, Spieces, Count),
+    best(_,_,C),
+    Count > C, retractall(best(_,_,_)),
+    asserta(best(Who,Spieces,Count)).
+
+find_most_sensitive_species(L,C,T):-
+    retractall(best(_,_,_)),
+    asserta(best(_,_,0)),
+    findall(_,find_extinction,_),
+    best(L,T,C).
+
+
+
