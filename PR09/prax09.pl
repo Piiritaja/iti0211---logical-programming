@@ -10,21 +10,19 @@
 */
 
 lihtlause --> nimisonafraas, tegusonafraas.
-lihtlause --> nimisona, tegusonafraas.
 nimisonafraas --> maarsonafraas, nimisona.
-nimisonafraas --> maarsona, nimisona.
-maarsonafraas --> omadussona ; [], maarsona.
+nimisonafraas --> maarsonafraas, nimisona.
+maarsonafraas --> omadussona, maarsona ; [].
 tegusonafraas --> [ei], tegusona, maarsonafraas.
 tegusonafraas --> tegusona, maarsonafraas.
-liitlause --> lihtlause, [,], lihtlause ; liitlause.
+liitlause --> lihtlause, [,], (lihtlause ; liitlause).
 
 nimisona --> [sammal] ; [uhkus] ; [raha] ; [volad].
 maarsona --> [kivile] ; [upakile].
-omadussona --> [veerevale].
+omadussona --> [veerevale]; [].
 tegusona --> [kasva] ; [ajab] ; [tuleb] ; [laheb] ; [jaavad].
 
 /*
-veerevale kivile sammal ei kasva (juursümbol: 'lihtlause').
 phrase(lihtlause, [veerevale, kivile, sammal, ei, kasva]).
 phrase(lihtlause, [uhkus, ajab, upakile]).
 phrase(liitlause, [raha, tuleb, ',', raha, laheb, ',', volad, jaavad]).
