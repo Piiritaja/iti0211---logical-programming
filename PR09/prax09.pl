@@ -24,7 +24,7 @@ omadussona --> [veerevale].
 tegusona --> [kasva] ; [ajab] ; [tuleb] ; [laheb] ; [jaavad].
 
 /*
-veerevale kivile sammal ei kasva (juursümbol: 'lihtlause') 
+veerevale kivile sammal ei kasva (juursümbol: 'lihtlause').
 phrase(lihtlause, [veerevale, kivile, sammal, ei, kasva]).
 phrase(lihtlause, [uhkus, ajab, upakile]).
 phrase(liitlause, [raha, tuleb, ',', raha, laheb, ',', volad, jaavad]).
