@@ -15,6 +15,7 @@ nimisonafraas --> maarsonafraas, nimisona.
 maarsonafraas --> omadussona, maarsona ; [].
 tegusonafraas --> [ei], tegusona, maarsonafraas.
 tegusonafraas --> tegusona, maarsonafraas.
+tegusonafraas --> tegusona, maarsonafraas.
 liitlause --> lihtlause, [,], (lihtlause ; liitlause).
 
 nimisona --> [sammal] ; [uhkus] ; [raha] ; [volad].
