@@ -176,8 +176,11 @@ status:-
 
 vota(X,Y,Suund,X1,Y1,X2,Y2) :- 
     retract(ruut(X1, Y1, _),
+    asserta(ruut(X1, Y1, 0)),
     tee_kaik(X, Y, X2, Y2)).
 
 tee_kaik(X,Y,X1,Y1) :- 
     retract(ruut(X, Y, C)),
+    retract(ruut(X1, Y1, _)),
+    asserta(ruut(X, Y, 0)),
     asserta(ruut(X1, Y1, C)).
